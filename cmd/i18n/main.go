@@ -26,8 +26,6 @@ func main() {
 
 	for _, filename := range files {
 
-		log.Println(filename)
-
 		content, err := ioutil.ReadFile(filename)
 		if err != nil {
 			log.Fatal(err)
