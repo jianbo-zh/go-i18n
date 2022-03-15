@@ -19,23 +19,22 @@ func main() {
 
 	data := make(map[string]string)
 
-	fi, err := ioutil.ReadDir(config.ExtractDir)
+	files, err := glob(config.ExtractDir, ".go")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, v := range fi {
-		if v.IsDir() {
-			continue
-		}
+	for _, filename := range files {
 
-		content, err := ioutil.ReadFile(v.Name())
+		log.Println(filename)
+
+		content, err := ioutil.ReadFile(filename)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		fset := token.NewFileSet()
-		f, err := parser.ParseFile(fset, v.Name(), string(content), 0)
+		f, err := parser.ParseFile(fset, filename, string(content), 0)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -84,19 +83,40 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// zh_CN
-	defaultOutputFile := path.Join(config.OutputDir, config.DefaultLang, "data.json")
+	defaultLangDir := path.Join(config.OutputDir, config.DefaultLang)
+	fi, err := os.Stat(defaultLangDir)
+	if err != nil && errors.Is(err, os.ErrNotExist) {
+		err = os.MkdirAll(defaultLangDir, 0755)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if !fi.IsDir() {
+		log.Fatalf("[%s] is not dir", defaultLangDir)
+	}
+
+	defaultOutputFile := path.Join(defaultLangDir, "data.json")
 	err = ioutil.WriteFile(defaultOutputFile, content, 0664)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, lang := range strings.Split(",", config.SupportLangs) {
+	for _, lang := range strings.Split(config.SupportLangs, ",") {
 		if lang == config.DefaultLang || lang == "" {
 			continue
 		}
 
-		langFile := path.Join(config.OutputDir, lang, "data.json")
+		langDir := path.Join(config.OutputDir, lang)
+		fi, err := os.Stat(langDir)
+		if err != nil && errors.Is(err, os.ErrNotExist) {
+			err = os.MkdirAll(langDir, 0755)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else if !fi.IsDir() {
+			log.Fatalf("[%s] is not dir", langDir)
+		}
+
+		langFile := path.Join(langDir, "data.json")
 		if _, err := os.Stat(langFile); errors.Is(err, os.ErrNotExist) {
 			err = ioutil.WriteFile(langFile, content, 0664)
 			if err != nil {

@@ -17,7 +17,7 @@ func ParseFlag() CommandConfig {
 	flag.StringVar(&initConf.ExtractDir, "extract.dir", ".", "The directory containing the files to be translated")
 	flag.StringVar(&initConf.OutputDir, "output.dir", "translations", "output directory for translation strings")
 	flag.StringVar(&initConf.DefaultLang, "default.language", "en_US", "default language")
-	flag.StringVar(&initConf.SupportLangs, "support.languages", "en_US,zh_CN,", "all support languages")
+	flag.StringVar(&initConf.SupportLangs, "support.languages", "en_US,zh_CN", "all support languages")
 
 	flag.Parse()
 
