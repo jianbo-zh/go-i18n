@@ -30,16 +30,6 @@ func Printf(format string, a ...interface{}) {
 	_, _ = p.Printf(format, a...)
 }
 
-// Sprint is like fmt.Sprint, but using language-specific formatting.
-func Sprint(a ...interface{}) string {
-	return p.Sprint(a...)
-}
-
-// Println is like fmt.Println, but using language-specific formatting.
-func Println(a ...interface{}) {
-	_, _ = p.Println(a...)
-}
-
 func Templatef(format string, a ...interface{}) string {
 	bs, _ := json.Marshal(TmplRaw{Format: format, Params: a})
 	return string(bs)

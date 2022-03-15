@@ -72,7 +72,10 @@ func Setup(defaultLang language.Tag, supportLangs []language.Tag, translationDir
 		}
 
 		for key, msg := range trans {
-			_ = message.SetString(curLang, key, msg)
+			err = message.SetString(curLang, key, msg)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 
