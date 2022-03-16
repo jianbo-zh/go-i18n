@@ -13,7 +13,7 @@ type CommandConfig struct {
 func ParseFlag() CommandConfig {
 	var initConf CommandConfig
 
-	flag.StringVar(&initConf.Packname, "packname", "i18n", "pack name")
+	flag.StringVar(&initConf.Packname, "packname", "goi18n", "pack name")
 	flag.StringVar(&initConf.ExtractDir, "extract.dir", ".", "The directory containing the files to be translated")
 	flag.StringVar(&initConf.OutputDir, "output.dir", "translations", "output directory for translation strings")
 	flag.StringVar(&initConf.DefaultLang, "default.language", "en", "default language")

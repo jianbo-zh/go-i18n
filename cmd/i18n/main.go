@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -61,7 +62,7 @@ func main() {
 			// if Fprintf, we'll take second arg as template
 			if fn.Sel.Name == "Fprintf" {
 				expr = call.Args[1]
-			} else { // include Printf, Sprintf
+			} else { // include Printf, Sprintf, Templatef
 				expr = call.Args[0]
 			}
 			str, ok := expr.(*ast.BasicLit)
@@ -71,7 +72,10 @@ func main() {
 
 			// Keep this for later debug usage.
 			// log.Printf("%v", str.Value)
-			data[str.Value] = str.Value
+
+			strVal, _ := strconv.Unquote(str.Value)
+
+			data[strVal] = strVal
 			return true
 		})
 	}
