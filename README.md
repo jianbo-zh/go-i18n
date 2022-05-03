@@ -5,13 +5,20 @@ Install:
 go install github.com/jianbo-zh/go-i18n/cmd/i18n@latest
 
 # extract translation content
-i18n -extract.dir=./cmd/
+i18n extract -extract.dir=./cmd/ -output.dir=./translations
 
-# import i18n package
-import ("github.com/jianbo-zh/go-i18n")
+# generator translations to gofile
+i18n generator -output.dir=./translations
 
 # project init
-goi18n.Setup(language.English, []language.Tag{language.English}, "path/to/translations")
+import (
+    _ "path/to/translations"
+)
+
+# import i18n package for use
+import (
+    goi18n "github.com/jianbo-zh/go-i18n"
+)
 ```
 
 Options:

@@ -1,8 +1,11 @@
 package main
 
-import "flag"
+import (
+	"flag"
+)
 
 type CommandConfig struct {
+	SubCommand   string `json:"subCommand"`   // 子命令
 	ExtractDir   string `json:"extractDir"`   // 提取根目录
 	OutputDir    string `json:"outputDir"`    // 输出目录
 	DefaultLang  string `json:"defaultLang"`  // 默认语言
@@ -20,6 +23,8 @@ func ParseFlag() CommandConfig {
 	flag.StringVar(&initConf.SupportLangs, "support.languages", "en,zh", "all support languages")
 
 	flag.Parse()
+
+	initConf.SubCommand = flag.Arg(0)
 
 	return initConf
 }

@@ -8,11 +8,18 @@ import (
 	"golang.org/x/text/message"
 )
 
-var p *message.Printer
+// *message.Printer
+var p = message.NewPrinter(language.AmericanEnglish)
 
 type TmplRaw struct {
 	Format string        `json:"f"`
 	Params []interface{} `json:"p"`
+}
+
+func Setup(defaultLang language.Tag) {
+	if defaultLang != language.AmericanEnglish {
+		p = message.NewPrinter(defaultLang)
+	}
 }
 
 // Fprintf is like fmt.Fprintf, but using language-specific formatting.
