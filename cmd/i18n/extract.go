@@ -16,7 +16,7 @@ import (
 
 func extract(config CommandConfig) {
 
-	data := make(map[string]string)
+	defaultLangMap := make(map[string]string)
 
 	files, err := glob(config.ExtractDir, ".go")
 	if err != nil {
@@ -73,12 +73,12 @@ func extract(config CommandConfig) {
 
 			strVal, _ := strconv.Unquote(str.Value)
 
-			data[strVal] = strVal
+			defaultLangMap[strVal] = strVal
 			return true
 		})
 	}
 
-	content, err := json.MarshalIndent(data, "", "  ")
+	defaultLangBs, err := json.MarshalIndent(defaultLangMap, "", "  ")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -95,7 +95,7 @@ func extract(config CommandConfig) {
 	}
 
 	defaultOutputFile := path.Join(defaultLangDir, "data.json")
-	err = ioutil.WriteFile(defaultOutputFile, content, 0664)
+	err = os.WriteFile(defaultOutputFile, defaultLangBs, 0664)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -116,9 +116,41 @@ func extract(config CommandConfig) {
 			log.Fatalf("[%s] is not dir", langDir)
 		}
 
-		langFile := path.Join(langDir, "data.json")
-		if _, err := os.Stat(langFile); errors.Is(err, os.ErrNotExist) {
-			err = ioutil.WriteFile(langFile, content, 0664)
+		langOutFile := path.Join(langDir, "data.json")
+		if _, err := os.Stat(langOutFile); errors.Is(err, os.ErrNotExist) {
+			err = os.WriteFile(langOutFile, defaultLangBs, 0664)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			langBs, err := os.ReadFile(langOutFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			var langMap map[string]string
+			err = json.Unmarshal(langBs, &langMap)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			rLangMap := map[string]string{}
+
+			for k, dmsg := range defaultLangMap {
+				lmsg, exists := langMap[k]
+				if exists {
+					rLangMap[k] = lmsg
+				} else {
+					rLangMap[k] = dmsg
+				}
+			}
+
+			rLangBs, err := json.MarshalIndent(rLangMap, "", "  ")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			err = os.WriteFile(langOutFile, rLangBs, 0664)
 			if err != nil {
 				log.Fatal(err)
 			}
