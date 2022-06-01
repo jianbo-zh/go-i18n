@@ -58,8 +58,12 @@ func extract(config CommandConfig) {
 
 			var expr ast.Expr
 			// if Fprintf, we'll take second arg as template
-			if fn.Sel.Name == "Fprintf" {
+			if fn.Sel.Name == "Fprintfl" {
+				expr = call.Args[2]
+
+			} else if fn.Sel.Name == "Fprintf" || fn.Sel.Name == "Sprintfl" || fn.Sel.Name == "Printfl" {
 				expr = call.Args[1]
+
 			} else { // include Printf, Sprintf, Templatef
 				expr = call.Args[0]
 			}
