@@ -11,6 +11,7 @@ type CommandConfig struct {
 	DefaultLang  string `json:"defaultLang"`  // 默认语言
 	SupportLangs string `json:"supportLangs"` // 支持语言
 	Packname     string `json:"packname"`     // 包名
+	Debug        bool   `json:"debug"`        // 是否打印调试日志
 }
 
 func ParseFlag() CommandConfig {
@@ -21,6 +22,7 @@ func ParseFlag() CommandConfig {
 	flag.StringVar(&initConf.OutputDir, "output.dir", "translations", "output directory for translation strings")
 	flag.StringVar(&initConf.DefaultLang, "default.language", "en", "default language")
 	flag.StringVar(&initConf.SupportLangs, "support.languages", "en,zh", "all support languages")
+	flag.BoolVar(&initConf.Debug, "debug", false, "if open debug log")
 
 	flag.Parse()
 
