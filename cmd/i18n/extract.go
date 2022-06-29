@@ -24,6 +24,7 @@ func extract(config CommandConfig) {
 	}
 
 	for _, filename := range files {
+		log.Println("-----------", filename, "-----------")
 
 		content, err := ioutil.ReadFile(filename)
 		if err != nil {
@@ -39,20 +40,26 @@ func extract(config CommandConfig) {
 		ast.Inspect(f, func(n ast.Node) bool {
 			call, ok := n.(*ast.CallExpr)
 			if !ok {
+				log.Println("11111")
 				return true
 			}
+			log.Println(call.Fun)
 			fn, ok := call.Fun.(*ast.SelectorExpr)
 			if !ok {
+				log.Println("22222")
 				return true
 			}
 			pack, ok := fn.X.(*ast.Ident)
 			if !ok {
+				log.Println("33333")
 				return true
 			}
 			if pack.Name != config.Packname {
+				log.Println("444444")
 				return true
 			}
 			if len(call.Args) == 0 {
+				log.Println("55555")
 				return true
 			}
 
@@ -69,11 +76,12 @@ func extract(config CommandConfig) {
 			}
 			str, ok := expr.(*ast.BasicLit)
 			if !ok {
+				log.Println("6666666")
 				return true
 			}
 
 			// Keep this for later debug usage.
-			// log.Printf("%v", str.Value)
+			log.Printf("%v", str.Value)
 
 			strVal, _ := strconv.Unquote(str.Value)
 
