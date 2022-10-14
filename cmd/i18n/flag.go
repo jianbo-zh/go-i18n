@@ -31,15 +31,16 @@ func ParseFlag() CommandConfig {
 
 	flag.StringVar(&initConf.Packname, "packname", "goi18n", "pack name")
 	flag.Var(&initConf.ExtractDir, "extract.dir", "The directory containing the files to be translated")
-	if len(initConf.ExtractDir) == 0 {
-		initConf.ExtractDir = append(initConf.ExtractDir, ".")
-	}
 	flag.StringVar(&initConf.OutputDir, "output.dir", "translations", "output directory for translation strings")
 	flag.StringVar(&initConf.DefaultLang, "default.language", "en", "default language")
 	flag.StringVar(&initConf.SupportLangs, "support.languages", "en,zh", "all support languages")
 	flag.BoolVar(&initConf.Debug, "debug", false, "if open debug log")
 
 	flag.Parse()
+
+	if len(initConf.ExtractDir) == 0 {
+		initConf.ExtractDir = append(initConf.ExtractDir, ".")
+	}
 
 	initConf.SubCommand = flag.Arg(0)
 

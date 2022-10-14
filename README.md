@@ -5,10 +5,10 @@ Install:
 go install github.com/jianbo-zh/go-i18n/cmd/i18n@latest
 
 # extract translation content
-i18n extract -extract.dir=./cmd/ -output.dir=./translations
+i18n -extract.dir=./cmd/ -output.dir=./translations extract
 
 # generator translations to gofile
-i18n generator -output.dir=./translations
+i18n -output.dir=./translations generator
 
 # project init
 import (
