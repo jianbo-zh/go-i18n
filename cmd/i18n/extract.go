@@ -18,9 +18,14 @@ func extract(config CommandConfig) {
 
 	defaultLangMap := make(map[string]string)
 
-	files, err := glob(config.ExtractDir, ".go")
-	if err != nil {
-		log.Fatal(err)
+	files := make([]string, 0)
+	for _, dir := range config.ExtractDir {
+		tmpFiles, err := glob(dir, ".go")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		files = append(files, tmpFiles...)
 	}
 
 	for _, filename := range files {
